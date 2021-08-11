@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { Box, Button, Link, Flex } from '@chakra-ui/react';
-import Wrapper from '../components/Wrapper';
-import InputField from '../components/InputField';
+import { Wrapper } from '../components/Wrapper';
+import { InputField } from '../components/InputField';
 import { useLoginMutation } from '../generated/graphql';
 import { toErrorMap } from '../utils/toErrorMap';
 import { useRouter } from 'next/router';
@@ -22,8 +22,12 @@ const Login: React.FC<{}> = ({}) => {
           if (response.data?.login.errors) {
             setErrors(toErrorMap(response.data.login.errors));
           } else if (response.data?.login.user) {
-            // worked
-            router.push('/');
+            if (typeof router.query.next === 'string') {
+              router.push(router.query.next);
+            } else {
+              // worked
+              router.push('/');
+            }
           }
         }}>
         {({ isSubmitting }) => (
